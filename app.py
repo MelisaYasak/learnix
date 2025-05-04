@@ -13,7 +13,7 @@ import json
 
 import models.scheduler as s
 import models.calender as c
-
+import models.planner as p
 
 os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = "1"  # http:// kullanımına izin ver
 
@@ -54,45 +54,29 @@ async def chat(request: Request):
     if analysis.get("is_study_plan_request", False):
         # User is requesting a study plan
         response = await s.generate_schedule(message)
+        # 💡 Burada parse işlemi oluyor
+        p.PlanResponse(**response["content"])
+
     else:
         # User is just chatting
         response = await s. generate_chat_response(message)
     return JSONResponse(content=response)
 
 
-# Çalışma planı için model
-class ScheduleItem(BaseModel):
-    day: str
-    start: str
-    end: str
-    title: str
-    description: str
-
-
-class PlanRequest(BaseModel):
-    schedule: List[ScheduleItem]
-
-# Takvime ekleme endpoint'i
-
-
 @app.post("/add-to-calendar")
-async def add_to_calendar(plan: PlanRequest):
+async def add_to_calendar():
+    print(p.PlanResponse)
     # Takvime etkinlik ekle
     service = c.create_service()
 
-    event_list = c.convert_events_to_calendar(plan)
+    event_list = p.convert_events_to_calendar(p.PlanResponse)
     for event in event_list:
         print("hello")
-        '''created_event = service.events().insert(
+        created_event = service.events().insert(
             calendarId='primary', body=event).execute()
-        print(f"Event created: {created_event.get('htmlLink')}")'''
-    print(f"Plan Received: {plan.schedule}")
+        print(f"Event created: {created_event.get('htmlLink')}")
+    print(f"Plan Received: {p.PlanResponse.schedule}")
     return {
         "message": "Etkinlik oluşturuldu!",
+        "event_link": created_event.get('htmlLink')
     }
-
-
-'''return {
-    "message": "Etkinlik oluşturuldu!",
-    "event_link": created_event.get('htmlLink')
-}'''

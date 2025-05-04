@@ -73,7 +73,7 @@ function displayStudyPlan(data) {
     data.schedule.forEach(item => {
       responseHTML += `
         <li class="schedule-item">
-          <div><strong>${item.day}</strong> <div class="time"> ${item.start}-${item.end} </div>: <span class="topic">${item.title}</span></div>
+          <div><strong>${item.day}</strong> (${item.start}-${item.end}): <span class="topic">${item.title}</span></div>
           <div class="description">${item.description || ""}</div>
         </li>`;
     });
@@ -110,36 +110,14 @@ function addToCalendar() {
   // Scroll to bottom of chat
   chatBox.scrollTop = chatBox.scrollHeight;
 }
-
+ 
 function addToCalendar() {
-  // Planı almak
-  const studyPlan = document.querySelector(".schedule");  // Planı DOM'dan alıyoruz
-  const scheduleItems = Array.from(studyPlan.querySelectorAll(".schedule-item"));
-  
-  // Plan verisini toplayalım
-  const planData = scheduleItems.map(item => {
-    const day = item.querySelector("strong").innerText;
-    const start = item.querySelector("time").innerText.split("-")[0].trim();
-    const end = item.querySelector("time").innerText.split("-")[1].trim();
-    const title = item.querySelector(".topic").innerText;
-    const description = item.querySelector(".description").innerText;
-    
-    return {
-      day: day,
-      start: start,
-      end: end,
-      title: title,
-      description: description
-    };
-  });
-
   // Backend'e gönderme
   fetch("/add-to-calendar", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ schedule: planData }),
   })
     .then(response => response.json())
     .then(data => {
@@ -164,4 +142,4 @@ function addToCalendar() {
       chatBox.innerHTML += `<p><strong>AI:</strong> Sorry, I encountered an error while adding the plan to your calendar. Please try again later.</p>`;
       chatBox.scrollTop = chatBox.scrollHeight;
     });
-}
+} 
