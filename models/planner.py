@@ -4,19 +4,21 @@ from pydantic import BaseModel
 from typing import List
 
 
-class ScheduleItem(BaseModel):
-    day: str
-    start: str
-    end: str
-    title: str
-    description: str
-
-
-class PlanResponse(BaseModel):
-    schedule: List[ScheduleItem]
-
-
 today = datetime.datetime.now()
+study_plan_result = None
+
+
+def set_study_plan(result):
+    """Set the study plan result that can be accessed globally"""
+    global study_plan_result
+    study_plan_result = result
+    return study_plan_result
+
+
+def get_study_plan():
+    """Get the current study plan result"""
+    global study_plan_result
+    return study_plan_result
 
 
 def get_next_weekday_date(day_name, start_date):
@@ -33,7 +35,10 @@ def get_next_weekday_date(day_name, start_date):
     today_weekday = start_date.weekday()  # Bugünün haftanın günü numarasını al
     if day_name.lower() == 'today':
         target_weekday = today.weekday()
-    target_weekday = weekday_map[day_name]  # Hedef haftanın gününü al
+    elif day_name.lower() == 'tomorrow':
+        target_weekday = today.weekday()+1
+    else:
+        target_weekday = weekday_map[day_name]  # Hedef haftanın gününü al
 
     # Eğer hedef gün bugün ya da sonraki bir günse
     days_diff = (target_weekday - today_weekday) % 7
@@ -43,27 +48,33 @@ def get_next_weekday_date(day_name, start_date):
 
 
 def convert_events_to_calendar(study_plan):
-    event_list = []  # Etkinlikleri tutacağımız liste
+    event_list = []  # List to store events
+    schedule_list = study_plan['schedule']
+    print(schedule_list)
+    current_date = today.date()  # Starting date
 
-    current_date = today  # Başlangıç tarihi
-    for item in study_plan:
-        print("****************************************************************************************************************************************")
-        print(item)
-        target_day = item.day  # Planlanan gün (örneğin 'Monday')
-        event_start_time = item.start  # Başlangıç saati
-        event_end_time = item.end  # Bitiş saati
-        print(event_start_time)
-        print(event_end_time)
-        # Hedef günün tarihini bulalım
+    for item in schedule_list:
+        # Access dictionary items consistently using dictionary syntax
+        target_day = item['day']  # Planned day (e.g., 'Monday')
+        event_start_time = item['start']  # Start time
+        event_end_time = item['end']  # End time
+
+        # Find the target day's date
         target_date = get_next_weekday_date(target_day, current_date)
 
-        # Etkinlik başlatma ve bitiş tarihlerini oluşturma
-        start_time = datetime.datetime.combine(target_date, datetime.datetime.strptime(
-            event_start_time, '%HH:%MM').time()).replace(tzinfo=datetime.timezone.utc)
-        end_time = datetime.datetime.combine(target_date, datetime.datetime.strptime(
-            event_end_time, '%HH:%MM').time()).replace(tzinfo=datetime.timezone.utc)
+        # Create event start and end times
+        # Fix the time format to '%H:%M' (hours:minutes)
+        start_time = datetime.datetime.combine(
+            target_date,
+            datetime.datetime.strptime(event_start_time, '%H:%M').time()
+        ).replace(tzinfo=datetime.timezone.utc)
 
-        # Etkinlik oluşturma
+        end_time = datetime.datetime.combine(
+            target_date,
+            datetime.datetime.strptime(event_end_time, '%H:%M').time()
+        ).replace(tzinfo=datetime.timezone.utc)
+
+        # Create the event
         event = {
             'summary': item['title'],
             'description': item['description'],
@@ -77,7 +88,7 @@ def convert_events_to_calendar(study_plan):
             },
         }
 
-        # Etkinliği listeye ekle
+        # Add the event to the list
         event_list.append(event)
 
     return event_list

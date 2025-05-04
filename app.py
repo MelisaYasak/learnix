@@ -1,6 +1,4 @@
 from fastapi import FastAPI, Request
-from pydantic import BaseModel
-from typing import List
 from google_auth_oauthlib.flow import Flow
 from googleapiclient.discovery import build
 from fastapi.responses import HTMLResponse, JSONResponse, RedirectResponse
@@ -15,16 +13,6 @@ import models.scheduler as s
 import models.calender as c
 import models.planner as p
 
-os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = "1"  # http:// kullanımına izin ver
-
-# === Gerekli bilgiler ===
-BASE_DIR = pathlib.Path(__file__).parent.resolve()
-CLIENT_SECRET_FILE = BASE_DIR / 'models/client_secret.json'
-SCOPES = ['https://www.googleapis.com/auth/calendar']
-# BU URI Google Console'da da kayıtlı olmalı
-REDIRECT_URI = 'http://localhost:8000/oauth2callback'
-
-
 app = FastAPI()
 templates = Jinja2Templates(directory="templates")
 app.mount("/static", StaticFiles(directory="static"), name="static")
@@ -32,14 +20,6 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 
 @app.get("/", response_class=HTMLResponse)
 async def root(request: Request):
-    flow = Flow.from_client_secrets_file(
-        str(CLIENT_SECRET_FILE),
-        scopes=SCOPES,
-        redirect_uri=REDIRECT_URI
-    )
-    auth_url, _ = flow.authorization_url(prompt='consent')
-    RedirectResponse(auth_url)
-
     return templates.TemplateResponse("index.html", {"request": request})
 
 
@@ -48,35 +28,42 @@ async def chat(request: Request):
     body = await request.json()
     message = body.get("message", "")
 
-    # First analyze if the user is requesting a study plan
+    # Analyze the request and check if it's a study plan request
     analysis = await s.analyze_request(message)
 
     if analysis.get("is_study_plan_request", False):
-        # User is requesting a study plan
+        # Generate a study plan if requested
         response = await s.generate_schedule(message)
-        # 💡 Burada parse işlemi oluyor
-        p.PlanResponse(**response["content"])
-
+        # Create PlanResponse from the generated schedule
+        p.set_study_plan(response)
     else:
-        # User is just chatting
-        response = await s. generate_chat_response(message)
+        # Handle regular chat responses
+        response = await s.generate_chat_response(message)
+
     return JSONResponse(content=response)
 
 
 @app.post("/add-to-calendar")
 async def add_to_calendar():
-    print(p.PlanResponse)
-    # Takvime etkinlik ekle
+    created_events = []
+    event_links = []
+    schedule_list = p.get_study_plan()
     service = c.create_service()
 
-    event_list = p.convert_events_to_calendar(p.PlanResponse)
+    # Ensure the service is valid
+    if not hasattr(service, 'events'):
+        raise ValueError("Google Calendar service not properly initialized.")
+
+    event_list = p.convert_events_to_calendar(schedule_list['content'])
     for event in event_list:
-        print("hello")
         created_event = service.events().insert(
             calendarId='primary', body=event).execute()
+        event_links.append(created_event.get('htmlLink'))
+        created_events.append(created_event)
         print(f"Event created: {created_event.get('htmlLink')}")
-    print(f"Plan Received: {p.PlanResponse.schedule}")
+
+    # Return a response with links to all created events
     return {
-        "message": "Etkinlik oluşturuldu!",
-        "event_link": created_event.get('htmlLink')
+        "message": f"{len(created_events)} event(s) created.",
+        "event_links": event_links
     }

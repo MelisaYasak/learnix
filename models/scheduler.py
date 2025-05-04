@@ -132,7 +132,6 @@ async def generate_schedule(user_message: str) -> dict:
     """
 
     model = genai.GenerativeModel('gemini-2.0-flash')
-    print(f"User message: {user_message}")
 
     response = model.generate_content(prompt)
     # Extract the JSON string from the markdown code block
@@ -160,7 +159,7 @@ async def generate_schedule(user_message: str) -> dict:
                 "summary": "I'm sorry, I couldn't generate a proper study plan. Could you provide more details about what you want to learn?",
                 "schedule": []
             }
-    print(result)
+
     # Add type identifier for frontend
     return {
         "type": "study_plan",
