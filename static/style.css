@@ -1,0 +1,46 @@
+/* You can move the styles from index.html to this file if you prefer external CSS */
+body {
+    font-family: Arial, sans-serif;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  h1 {
+    color: #3498db;
+    text-align: center;
+  }
+  #chat-box {
+    height: 400px;
+    border: 1px solid #ddd;
+    padding: 15px;
+    margin-bottom: 15px;
+    overflow-y: auto;
+    background-color: #f9f9f9;
+    border-radius: 5px;
+  }
+  #user-input {
+    width: 80%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+  }
+  button {
+    padding: 10px 15px;
+    background-color: #3498db;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  button:hover {
+    background-color: #2980b9;
+  }
+  .schedule {
+    background-color: #e8f4fc;
+    padding: 10px;
+    border-radius: 5px;
+    margin-top: 10px;
+  }
+  .schedule ul {
+    padding-left: 20px;
+  }

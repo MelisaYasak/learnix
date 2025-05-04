@@ -1,0 +1,13 @@
+# Python cache klasörleri
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Ortam dosyaları
+.env
+.venv/
+venv/
+
+# IDE ayar dosyaları
+.vscode/
+.idea/

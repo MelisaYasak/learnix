@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Next Gen Learning Chatbot</title>
+    <script src="/static/script.js" defer></script>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+      }
+      h1 {
+        color: #3498db;
+        text-align: center;
+      }
+      #chat-box {
+        height: 400px;
+        border: 1px solid #ddd;
+        padding: 15px;
+        margin-bottom: 15px;
+        overflow-y: auto;
+        background-color: #f9f9f9;
+        border-radius: 5px;
+      }
+      #user-input {
+        width: 80%;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+      }
+      button {
+        padding: 10px 15px;
+        background-color: #3498db;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+      button:hover {
+        background-color: #2980b9;
+      }
+      button:disabled {
+        background-color: #95a5a6;
+        cursor: not-allowed;
+      }
+      .schedule {
+        background-color: #e8f4fc;
+        padding: 15px;
+        border-radius: 5px;
+        margin-top: 10px;
+        margin-bottom: 10px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      }
+      .schedule h3 {
+        margin-top: 0;
+        color: #2c3e50;
+        border-bottom: 1px solid #bdc3c7;
+        padding-bottom: 8px;
+      }
+      .schedule ul {
+        padding-left: 0;
+        list-style-type: none;
+      }
+      .schedule-item {
+        margin-bottom: 15px;
+        background-color: white;
+        padding: 10px;
+        border-radius: 5px;
+        border-left: 4px solid #3498db;
+      }
+      .topic {
+        font-weight: bold;
+        color: #3498db;
+      }
+      .description {
+        margin-top: 5px;
+        font-size: 0.9em;
+        color: #555;
+        padding-left: 10px;
+        border-left: 2px solid #ddd;
+      }
+      .schedule-actions {
+        margin-top: 15px;
+        text-align: center;
+      }
+      .calendar-btn {
+        background-color: #27ae60;
+        padding: 8px 16px;
+        font-weight: bold;
+      }
+      .calendar-btn:hover {
+        background-color: #2ecc71;
+      }
+      .calendar-btn.added {
+        background-color: #95a5a6;
+      }
+      .message-container {
+        margin-bottom: 10px;
+      }
+      .ai-message {
+        background-color: #e8f4fc;
+        padding: 10px;
+        border-radius: 5px;
+        border-left: 4px solid #3498db;
+      }
+      .user-message {
+        background-color: #f0f0f0;
+        padding: 10px;
+        border-radius: 5px;
+        border-left: 4px solid #7f8c8d;
+        text-align: right;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Next Generation Learning</h1>
+    <div id="chat-box">
+      <!-- Initial AI message will be added by JavaScript -->
+    </div>
+    <div style="display: flex; gap: 10px">
+      <input
+        type="text"
+        id="user-input"
+        placeholder="What do you want to learn?"
+      />
+      <button onclick="sendMessage()">Send</button>
+    </div>
+
+    <!-- Add event listener for Enter key -->
+    <script>
+      document
+        .getElementById("user-input")
+        .addEventListener("keypress", function (event) {
+          if (event.key === "Enter") {
+            event.preventDefault();
+            sendMessage();
+          }
+        });
+    </script>
+  </body>
+</html>
