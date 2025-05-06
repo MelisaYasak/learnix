@@ -1,5 +1,6 @@
-
-![image](https://github.com/user-attachments/assets/77e3ac5f-1439-4ed9-8604-45c79eafaf0e)
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/77e3ac5f-1439-4ed9-8604-45c79eafaf0e" width="140" alt="LearnX Logo"/>
+</p>
 
 # LearnX – Your AI-Powered Study Timeline
 
