@@ -1,13 +1,28 @@
-# Python cache klasörleri
+# Python cache files
 __pycache__/
 *.py[cod]
 *.pyo
 
-# Ortam dosyaları
+# Environment and secret files
 .env
 .venv/
 venv/
+models/client_secret.json
 
-# IDE ayar dosyaları
+# IDE and system files
 .vscode/
 .idea/
+.DS_Store
+
+# Node.js, Vite, and other frontend build artifacts (if not using React frontend)
+node_modules/
+dist/
+*.log
+*.local
+*.suo
+*.njsproj
+*.sln
+*.sw?
+
+# Custom temporary files
+logs/

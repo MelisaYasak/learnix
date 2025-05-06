@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>LearnX • Next Generation Learning</title>
+  <link href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.2/main.min.css" rel="stylesheet">
+  <link href="/static/style.css" rel="stylesheet">
+  <link rel="icon" type="image/png" href="/static/learnx-icon.png">
+</head>
+<body>
+
+  <header>
+    <span class="brand-text">LearnX</span>
+    <button id="add-event-btn">+ Add Event</button>
+  </header>
+
+  <div class="container">
+    <div id="calendar-view"></div>
+
+    <div id="chat-area">
+      <div id="chat-box"></div>
+      <div id="chat-controls">
+        <input id="user-input" placeholder="What do you want to learn?" />
+        <button id="send-btn">Send</button>
+      </div>
+
+      <!-- Save & Load Plan Buttons -->
+      <div style="margin-top: 1rem;">
+        <button onclick="downloadSchedule()">💾 Save Plan</button>
+        <label style="cursor: pointer;">
+          📂 Load Plan
+          <input type="file" accept="application/json" onchange="uploadSchedule(event)" style="display: none;" />
+        </label>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal -->
+  <div id="modal" class="modal">
+    <div class="modal-content">
+      <span id="modal-close" class="close">&times;</span>
+      <h2 id="modal-title"></h2>
+      <div id="modal-body"></div>
+      <button id="modal-ok">OK</button>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.2/main.min.js"></script>
+  <script src="/static/script.js"></script>
+</body>
+</html>
