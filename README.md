@@ -76,3 +76,54 @@ LearnX empowers learners to structure and own their study journey through AI pla
 | `app.py`          | FastAPI backend – routes, logic dispatcher |
 
 ---
+
+## 💻 Run Locally (Step-by-Step Guide)
+
+### ✅ Prerequisites
+
+Before you begin, ensure you have the following installed on your machine:
+
+- Python 3.11 or higher
+- `pip` (Python package manager)
+- Git
+
+---
+
+### 🧭 Local Setup Instructions
+
+Follow these steps to run LearnX locally:
+
+1. **Clone the Repository**
+   ```bash
+   git clone https://github.com/MelisaYasak/learnx.git
+   cd learnx/backend
+   ```
+
+2. **(Optional but Recommended) Create Virtual Environment**
+   ```bash
+   python -m venv venv
+   source venv/bin/activate  # On Windows: venv\Scripts\activate
+   ```
+
+3. **Install Required Python Dependencies**
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+4. **Set Up Gemini API Key**
+
+   - Go to [Google AI Studio](https://makersuite.google.com/app/apikey) and generate an API key.
+   - Create a `.env` file in the `/backend` folder and add the following:
+     ```env
+     GEMINI_API_KEY=your-api-key-here
+     ```
+
+5. **Run the FastAPI App**
+   ```bash
+   uvicorn app:app --reload
+   ```
+
+6. **Open in Browser**
+
+   Visit: [http://127.0.0.1:8000](http://127.0.0.1:8000) to use the app locally 🎉
+   
